@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export async function getSupabaseServerClient() {
-  const { createServerClient } = await import('@supabase/ssr');
+  const { createServerClient } = await import('@supabase/supabase-js')
   const cookies = await import('next/headers').then(mod => mod.cookies);
   
   return createServerClient(
@@ -14,13 +14,13 @@ export async function getSupabaseServerClient() {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name) {
+        get(name: string) {
           return cookies().get(name)?.value;
         },
-        set(name, value, options) {
+        set(name: string, value: string, options?: any) {
           cookies().set(name, value, options);
         },
-        remove(name, options) {
+        remove(name: string, options?: any) {
           cookies().set(name, '', { ...options, maxAge: 0 });
         },
       },
